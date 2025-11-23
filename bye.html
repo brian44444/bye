@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ByE - Calculadora de Stickers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(46, 64, 112, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e4070 0%, #3d5291 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        .accent-line {
+            height: 4px;
+            background: linear-gradient(90deg, transparent 0%, #c49199 50%, transparent 100%);
+            margin: 20px 0;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #2e4070;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8d5d8;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #c49199;
+            background: white;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2e4070 0%, #3d5291 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(46, 64, 112, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 100%);
+            border-radius: 15px;
+            border-left: 5px solid #c49199;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #2e4070;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(46, 64, 112, 0.1);
+            color: #2e4070;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #2e4070;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid #c49199;
+        }
+
+        .result-label {
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #c49199;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #2e4070;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ByE</h1>
+            <p>TIENDA ONLINE</p>
+            <div class="accent-line"></div>
+        </div>
+
+        <div class="content">
+            <h2 style="color: #2e4070; margin-bottom: 25px; text-align: center;">Calculadora de Cotización de Stickers</h2>
+
+            <form id="stickerForm">
+                <div class="form-group">
+                    <label for="forma">Forma del Sticker:</label>
+                    <select id="forma" required>
+                        <option value="">Seleccione una forma</option>
+                        <option value="rectangular">Rectangular</option>
+                        <option value="circular">Circular</option>
+                        <option value="cuadrado">Cuadrado</option>
+                    </select>
+                </div>
+
+                <div class="row" id="dimensionesRow">
+                    <div class="form-group">
+                        <label for="ancho" id="labelAncho">Ancho (cm):</label>
+                        <input type="number" id="ancho" step="0.1" min="0.1" required>
+                    </div>
+                    <div class="form-group" id="altoGroup">
+                        <label for="alto">Alto (cm):</label>
+                        <input type="number" id="alto" step="0.1" min="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad">Cantidad de Stickers:</label>
+                    <input type="number" id="cantidad" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="costoHoja">Costo por Hoja de Stickers (MXN):</label>
+                    <input type="number" id="costoHoja" step="0.01" min="0.01" required>
+                </div>
+
+                <div class="info-box" style="margin-top: 0; margin-bottom: 20px;">
+                    <strong>💡 Impresora:</strong> HP Smart Tank 520/540 Series - Costo aproximado de impresión a color: $0.50 MXN por hoja
+                </div>
+
+                <button type="submit">Calcular Cotización</button>
+            </form>
+
+            <div class="info-box">
+                <strong>Nota:</strong> La hoja estándar es de 21.59 cm × 27.94 cm (carta). El cálculo incluye un margen de 1 cm y un espaciado de 0.3 cm entre stickers para facilitar el corte. El precio final incluye 100% de ganancia.
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-title">📋 Cotización</div>
+                <div class="result-item">
+                    <span class="result-label">Stickers por hoja:</span>
+                    <span class="result-value" id="stickersPerSheet"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Hojas necesarias:</span>
+                    <span class="result-value" id="sheetsNeeded"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Costo de hojas de stickers:</span>
+                    <span class="result-value" id="sheetCost"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Costo de impresión a color:</span>
+                    <span class="result-value" id="printingCost"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Costo total de producción:</span>
+                    <span class="result-value" id="productionCost"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Precio de venta (100% ganancia):</span>
+                    <span class="result-value" id="salePrice"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">💰 PRECIO FINAL:</span>
+                    <span class="result-value" id="finalPrice"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('forma').addEventListener('change', function() {
+            const forma = this.value;
+            const altoGroup = document.getElementById('altoGroup');
+            const labelAncho = document.getElementById('labelAncho');
+            const inputAlto = document.getElementById('alto');
+            const dimensionesRow = document.getElementById('dimensionesRow');
+            
+            if (forma === 'circular') {
+                altoGroup.style.display = 'none';
+                labelAncho.textContent = 'Diámetro (cm):';
+                dimensionesRow.style.gridTemplateColumns = '1fr';
+                inputAlto.removeAttribute('required');
+            } else if (forma === 'cuadrado') {
+                altoGroup.style.display = 'none';
+                labelAncho.textContent = 'Lado (cm):';
+                dimensionesRow.style.gridTemplateColumns = '1fr';
+                inputAlto.removeAttribute('required');
+            } else {
+                altoGroup.style.display = 'block';
+                labelAncho.textContent = 'Ancho (cm):';
+                dimensionesRow.style.gridTemplateColumns = '1fr 1fr';
+                inputAlto.setAttribute('required', 'required');
+            }
+        });
+        
+        document.getElementById('stickerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const forma = document.getElementById('forma').value;
+            let ancho = parseFloat(document.getElementById('ancho').value);
+            let alto = parseFloat(document.getElementById('alto').value);
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const costoHoja = parseFloat(document.getElementById('costoHoja').value);
+            
+            if (forma === 'circular' || forma === 'cuadrado') {
+                alto = ancho;
+            }
+            
+            const hojaAncho = 21.59;
+            const hojaAlto = 27.94;
+            const margen = 1;
+            
+            const areaUtilAncho = hojaAncho - (margen * 2);
+            const areaUtilAlto = hojaAlto - (margen * 2);
+            
+            // Espacio entre stickers para facilitar el corte (0.3 cm)
+            const espaciado = 0.3;
+            
+            const anchoTotal = ancho + espaciado;
+            const altoTotal = alto + espaciado;
+            
+            const columnas = Math.floor(areaUtilAncho / anchoTotal);
+            const filas = Math.floor(areaUtilAlto / altoTotal);
+            const stickersPerSheet = columnas * filas;
+            
+            if (stickersPerSheet === 0) {
+                alert('Las dimensiones del sticker son demasiado grandes para la hoja.');
+                return;
+            }
+            
+            const hojasNecesarias = Math.ceil(cantidad / stickersPerSheet);
+            const costoImpresionPorHoja = 0.50;
+            const costoImpresionTotal = hojasNecesarias * costoImpresionPorHoja;
+            const costoHojas = hojasNecesarias * costoHoja;
+            const costoProduccion = costoHojas + costoImpresionTotal;
+            const precioVenta = costoProduccion * 2;
+            
+            document.getElementById('stickersPerSheet').textContent = stickersPerSheet;
+            document.getElementById('sheetsNeeded').textContent = hojasNecesarias;
+            document.getElementById('sheetCost').textContent = '$' + costoHojas.toFixed(2) + ' MXN';
+            document.getElementById('printingCost').textContent = '$' + costoImpresionTotal.toFixed(2) + ' MXN';
+            document.getElementById('productionCost').textContent = '$' + costoProduccion.toFixed(2) + ' MXN';
+            document.getElementById('salePrice').textContent = '$' + precioVenta.toFixed(2) + ' MXN';
+            document.getElementById('finalPrice').textContent = '$' + precioVenta.toFixed(2) + ' MXN';
+            
+            document.getElementById('result').classList.add('show');
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>
